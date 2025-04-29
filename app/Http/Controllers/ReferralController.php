@@ -20,18 +20,37 @@ class ReferralController extends Controller
             ]);
         }
 
-        $totalReferList = Referral::with('user')->where('parent_id', $id)->latest()->get();
+        try {
+            $totalReferList = Referral::with('user')->where('parent_id', $id)->latest()->get();
 
-        $userCoinData = FreeCleaning::where('user_id', $user->id)->first();
-        $userCoinData['remaining_coins'] = $userCoinData->earn_coins - $userCoinData->used_coins;
+            $userCoinData = FreeCleaning::where('user_id', $user->id)->first();
+            $userCoinData['remaining_coins'] = $userCoinData->earn_coins - $userCoinData->used_coins;
 
-        return response()->json([
-            'ok' => true,
-            'message' => 'All referrals data showing',
-            'user' => $user,
-            'totalRefer' => count($totalReferList),
-            'userCoinData' => $userCoinData,
-            'totalReferList' => $totalReferList,
-        ]);
+            return response()->json([
+                'ok' => true,
+                'message' => 'All referrals data showing',
+                'user' => $user,
+                'totalRefer' => count($totalReferList),
+                'userCoinData' => $userCoinData,
+                'totalReferList' => $totalReferList,
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'ok' => false,
+                'message' => 'This user has not referred anyone.',
+                'user' => $user,
+                'totalRefer' => 0,
+                'userCoinData' => [
+                    "id"=> null,
+                    "user_id"=> null,
+                    "earn_coins"=> 0,
+                    "used_coins"=> 0,
+                    "remaining_coins"=> 0,
+                    "created_at"=> null,
+                    "updated_at"=> null,
+                ],
+                'totalReferList' => 'Not referred list',
+            ]);
+        }
     }
 }

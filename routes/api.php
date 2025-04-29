@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\CheckZipCodeController;
+use App\Http\Controllers\GetDiscountChargeController;
+use App\Http\Controllers\Payment\PaymentController;
 use App\Http\Controllers\ReferralController;
 use App\Http\Controllers\SendEnquiryController;
 use Illuminate\Http\Request;
@@ -28,11 +30,21 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/update-avatar/{id}', [AuthController::class, 'updateAvatar']);
 
     // All referrals data showing
-    Route::get('/all-referred-users/{id}',[ReferralController::class,'allReferredUsers']);
+    Route::get('/all-referred-info/{id}', [ReferralController::class, 'allReferredUsers']);
 
     // check zip code
-    Route::post('/check-zip-code',[CheckZipCodeController::class,'checkZipCode']);
+    Route::post('/check-zip-code', [CheckZipCodeController::class, 'checkZipCode']);
 
     // send enquiry (mail send to admin)
-    Route::post('send-enquiry',[SendEnquiryController::class,'sendEnquiry']);
+    Route::post('/send-enquiry', [SendEnquiryController::class, 'sendEnquiry']);
+
+    // discount $ monthly charge
+    Route::get('/discount-charge/{id}', [GetDiscountChargeController::class, 'getDiscountCharge']);
+
+    // create payment intent
+    Route::post('/payment-intent', [PaymentController::class, 'paymentIntent']);
+    Route::post('/payment-success', [PaymentController::class, 'paymentSuccess']);
+
+    // get previous history
+    Route::get('/get-previous-history/{id}', [PaymentController::class, 'getPreviousHistory']);
 });

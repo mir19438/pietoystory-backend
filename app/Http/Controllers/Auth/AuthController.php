@@ -661,7 +661,7 @@ class AuthController extends Controller
             ], 422);
         }
 
-        $user = User::findOrFail($id);
+        $user = User::find($id);
 
         // User Not Found
         if (!$user) {
@@ -704,7 +704,7 @@ class AuthController extends Controller
             ], 422);
         }
 
-        $user = User::findOrFail($id);
+        $user = User::find($id);
 
         if (! $user) {
             return response()->json([
